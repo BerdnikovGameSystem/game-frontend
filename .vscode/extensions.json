@@ -1,0 +1,16 @@
+{
+  "recommendations": [
+    "Vue.volar",
+    "dbaeumer.vscode-eslint",
+    "EditorConfig.EditorConfig",
+    "oxc.oxc-vscode",
+    "esbenp.prettier-vscode",
+    "elemefe.vscode-element-helper",
+    "formulahendry.auto-rename-tag",
+    "formulahendry.auto-close-tag",
+    "geeebe.duplicate",
+    "mrmlnc.vscode-jade-snippets",
+    "bradlc.vscode-tailwindcss",
+    "csstools.postcss"
+  ]
+}
