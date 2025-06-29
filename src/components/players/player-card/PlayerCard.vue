@@ -1,5 +1,10 @@
 <template lang="pug">
-  .bg-gray-800.rounded-md.h-16.px-16 {{ player.name }}
+  card
+    card-header
+      card-title
+       p {{ player.name }}
+    card-content
+      p *Статы игрока*
 </template>
 
 <script setup lang="ts">

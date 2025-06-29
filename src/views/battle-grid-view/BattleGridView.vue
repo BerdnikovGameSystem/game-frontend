@@ -2,4 +2,3 @@
 ingame-layout
   p Battle Grid
 </template>
-

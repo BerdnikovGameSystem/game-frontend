@@ -12,5 +12,13 @@
     "plugins": [
       "@vue/language-plugin-pug"
     ]
+  },
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    }
   }
 }

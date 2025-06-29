@@ -37,3 +37,11 @@ npm run build
 ```sh
 npm run lint
 ```
+
+### Добавление компонентов из shadcn
+
+```sh
+npx shadcn-vue@latest add <component-name>
+```
+
+[Компоненты](https://www.shadcn-vue.com/docs/components)

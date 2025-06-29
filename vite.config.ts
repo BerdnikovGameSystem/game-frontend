@@ -1,16 +1,12 @@
-import { fileURLToPath, URL } from 'node:url'
-
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import vueDevTools from 'vite-plugin-vue-devtools'
 import vuePugPlugin from 'vue-pug-plugin'
 import tailwindcss from '@tailwindcss/vite'
+import path from 'path'
 
 import Components from 'unplugin-vue-components/vite'
-import {
-  ElementPlusResolver,
-} from 'unplugin-vue-components/resolvers'
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -18,19 +14,21 @@ export default defineConfig({
     vue({
       template: {
         preprocessOptions: {
-          plugins: [
-            vuePugPlugin,
-          ]
-        }
-      }
+          plugins: [vuePugPlugin],
+        },
+        compilerOptions: {
+          // isBuiltInComponent: (tag) => {
+          //   console.log(tag);
+          //   return Symbol(tag);
+          // },
+        },
+      },
     }),
     vueJsx(),
     vueDevTools(),
     Components({
       dts: true,
-      resolvers: [
-        ElementPlusResolver(),
-      ],
+      resolvers: [],
       dirs: ['src/components'],
       deep: true,
     }),
@@ -38,7 +36,7 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
+      '@': path.resolve(__dirname, './src'),
     },
   },
 })

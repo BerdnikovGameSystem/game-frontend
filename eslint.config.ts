@@ -1,4 +1,4 @@
-import { globalIgnores } from 'eslint/config'
+import { globalIgnores, defineConfig } from 'eslint/config'
 import { defineConfigWithVueTs, vueTsConfigs } from '@vue/eslint-config-typescript'
 import pluginVue from 'eslint-plugin-vue'
 import pluginOxlint from 'eslint-plugin-oxlint'
@@ -21,4 +21,13 @@ export default defineConfigWithVueTs(
   vueTsConfigs.recommended,
   ...pluginOxlint.configs['flat/recommended'],
   skipFormatting,
+
+  ...defineConfig([
+    {
+      rules: {
+        // Иначе внутри pug не видит использования и ругается.
+        '@typescript-eslint/no-unused-vars': 'off',
+      }
+    }
+  ]),
 )
