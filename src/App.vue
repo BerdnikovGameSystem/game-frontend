@@ -1,10 +1,14 @@
 <template lang="pug">
-.flex.flex-col.h-screen.w-screen.place-content-stretch.bg-card.text-card-foreground
-  .flex.justify-center.place-items-center.relative.h-16
-    .absolute.right-0.px-4
-      theme-toggler
-    p.text-2xl Berdnikov Game System
-  separator
-  .grow
-    router-view
+sidebar-provider.bg-card.text-card-foreground
+  app-sidebar
+  main.w-full
+    .flex.flex-col.h-full
+      .flex.flex-row.w-full.place-items-center.justify-items-start
+        sidebar-trigger.m-2
+        b BGS
+        .grow-1
+        .mr-4
+          theme-toggler
+      separator
+      router-view
 </template>
