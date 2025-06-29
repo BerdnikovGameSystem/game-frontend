@@ -45,3 +45,12 @@ npx shadcn-vue@latest add <component-name>
 ```
 
 [Компоненты](https://www.shadcn-vue.com/docs/components)
+
+### Иконки
+
+[Каталог](https://www.radix-ui.com/icons)
+
+Использование:
+```pug
+i-radix-icons-{icon name}
+```

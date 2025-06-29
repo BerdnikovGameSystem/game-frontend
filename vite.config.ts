@@ -5,8 +5,9 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 import vuePugPlugin from 'vue-pug-plugin'
 import tailwindcss from '@tailwindcss/vite'
 import path from 'path'
-
 import Components from 'unplugin-vue-components/vite'
+import Icons from 'unplugin-icons/vite'
+import IconsResolver from 'unplugin-icons/resolver'
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -16,23 +17,18 @@ export default defineConfig({
         preprocessOptions: {
           plugins: [vuePugPlugin],
         },
-        compilerOptions: {
-          // isBuiltInComponent: (tag) => {
-          //   console.log(tag);
-          //   return Symbol(tag);
-          // },
-        },
       },
     }),
     vueJsx(),
     vueDevTools(),
     Components({
       dts: true,
-      resolvers: [],
+      resolvers: [IconsResolver()],
       dirs: ['src/components'],
       deep: true,
     }),
     tailwindcss(),
+    Icons(),
   ],
   resolve: {
     alias: {
