@@ -3,7 +3,7 @@
     <AccordionItem value="item-1">
       <AccordionTrigger>{{ title }}</AccordionTrigger>
       <div class="flex justify-end">
-        <BtnElem class="ml-auto">{{ button_name }}</BtnElem>
+        <Button class="ml-auto">{{ button_name }}</Button>
       </div>
       <AccordionContent class="flex-column">
         <table-element></table-element>
@@ -14,7 +14,7 @@
 
 <script setup lang="ts">
 import { defineProps } from "vue"
-import BtnElem from "../ui/btn/BtnElem.vue";
+import Button from "../ui/button/Button.vue";
 
 const props = defineProps({
   title: {
