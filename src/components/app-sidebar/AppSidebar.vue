@@ -11,11 +11,11 @@
                 p Сессии
       separator
       sidebar-group
-        sidebar-group-label Для сессии
         sidebar-group-content
           // TODO: Оформить
-          p.mb-4 Выбранная сессия:
-            p Jopa123
+          p.mb-2.p-2.font-bold Выбранная сессия:
+            p 777
+          sidebar-group-label Информация о сессии
           sidebar-menu
             sidebar-menu-item
               sidebar-menu-button
