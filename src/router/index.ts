@@ -1,11 +1,11 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory, createWebHistory } from 'vue-router'
 import HomeView from '../views/home-view/HomeView.vue'
 import BattleGridView from '@/views/battle-grid-view/BattleGridView.vue'
 import SessionsStoreExampleView
   from '@/views/dev/sessions/SessionsStoreExampleView.vue'
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
