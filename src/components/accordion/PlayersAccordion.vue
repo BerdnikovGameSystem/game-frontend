@@ -2,27 +2,41 @@
   <Accordion type="single" collapsible>
     <AccordionItem value="item-1">
       <AccordionTrigger>{{ title }}</AccordionTrigger>
-      <div class="flex justify-end">
-        <Button class="ml-auto">{{ button_name }}</Button>
-      </div>
       <AccordionContent class="flex-column">
-        <table-element></table-element>
+        <table-element :characters="characters" class="mb-4" />
+        <div class="flex justify-end">
+          <creation-windows :button_title="button_name" @create="addCharacter" />
+        </div>
       </AccordionContent>
     </AccordionItem>
   </Accordion>
 </template>
 
 <script setup lang="ts">
-import { defineProps } from "vue"
-import Button from "../ui/button/Button.vue";
+import { defineProps, ref } from 'vue'
+import type { IngamePlayer, Player } from '@/types/player'
 
 const props = defineProps({
   title: {
     type: String,
     required: true
   },
-  button_name:{
-    type:String
+  button_name: {
+    type: String
   }
 })
+
+const characters = ref<IngamePlayer[]>([])
+
+function toIngamePlayer(p: Player): IngamePlayer {
+  return {
+    ...p,
+    hits: p.maxHits,
+    energy: p.maxEnergy
+  }
+}
+
+function addCharacter(player: Player) {
+  characters.value.push(toIngamePlayer(player))
+}
 </script>
