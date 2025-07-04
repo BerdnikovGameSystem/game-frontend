@@ -7,7 +7,7 @@
         <Input type="number" v-model.number="player.level" />
       </Label>
       <Label class="flex flex-col items-start">Класс
-        <form-select select_title="Классы" select_placeholder="Выберите класс" :select_items="classes"
+        <app-select select-title="Классы" select-placeholder="Выберите класс" :select-items="classes"
           v-model="player.class" />
       </Label>
       <Label class="flex flex-col items-start">Макс. Хиты

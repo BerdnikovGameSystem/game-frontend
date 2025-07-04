@@ -10,7 +10,7 @@
     </TableHeader>
     <TableBody>
       <TableRow v-for="(character, index) in characters" :key="index">
-        <TableCell><table-avatar /></TableCell>
+        <TableCell><app-avatar /></TableCell>
         <TableCell>{{ character.name }}</TableCell>
         <TableCell>{{ character.class }}</TableCell>
         <TableCell class="text-right"> {{ character.level }}</TableCell>

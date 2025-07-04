@@ -1,12 +1,12 @@
 <template>
   <Select>
     <SelectTrigger>
-      <SelectValue :placeholder="select_placeholder"/>
+      <SelectValue :placeholder="selectPlaceholder"/>
     </SelectTrigger>
     <SelectContent>
       <SelectGroup>
-        <SelectLabel>{{select_title}}</SelectLabel>
-        <SelectItem v-for="item in select_items"
+        <SelectLabel>{{selectTitle}}</SelectLabel>
+        <SelectItem v-for="item in selectItems"
         :key="item.value"
         :value="item.value">
           {{ item.label }}
@@ -25,15 +25,15 @@ interface SelectItem {
 }
 
 const props = defineProps({
-  select_title: {
+  selectTitle: {
     type: String,
     default: ''
   },
-  select_placeholder: {
+  selectPlaceholder: {
     type: String,
     default: ''
   },
-  select_items: {
+  selectItems: {
     type: Array as () => SelectItem[],
     required: true,
     default: () => []

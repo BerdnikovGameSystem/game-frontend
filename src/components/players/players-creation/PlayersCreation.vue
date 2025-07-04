@@ -7,7 +7,7 @@
       <SheetHeader>
         <SheetTitle class="mb-4">{{ button_title }}</SheetTitle>
         <SheetDescription>
-          <creation-form @create="handleCreate" />
+          <players-Form @create="handleCreate" />
         </SheetDescription>
       </SheetHeader>
     </SheetContent>

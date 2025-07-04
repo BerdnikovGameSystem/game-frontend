@@ -3,9 +3,9 @@
     <AccordionItem value="item-1">
       <AccordionTrigger>{{ title }}</AccordionTrigger>
       <AccordionContent class="flex-column">
-        <table-element :characters="characters" class="mb-4" />
+        <players-table :characters="characters" class="mb-4" />
         <div class="flex justify-end">
-          <creation-windows :button_title="button_name" @create="addCharacter" />
+          <PlayersCreation :button_title="button_name" @create="addCharacter" />
         </div>
       </AccordionContent>
     </AccordionItem>
