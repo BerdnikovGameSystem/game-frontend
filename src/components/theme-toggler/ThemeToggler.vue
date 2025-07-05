@@ -2,7 +2,7 @@
 dropdown-menu
   dropdown-menu-trigger
     slot
-      btn(variant="ghost")
+      button(variant="ghost")
         theme-toggler-button-icon
   dropdown-menu-content.mx-4
     dropdown-menu-item(@click='mode = "light"')
@@ -18,6 +18,7 @@ dropdown-menu
 
 <script setup lang="ts">
 import { useColorMode } from '@vueuse/core'
+import Button from '../ui/button/Button.vue';
 
 const mode = useColorMode()
 </script>
