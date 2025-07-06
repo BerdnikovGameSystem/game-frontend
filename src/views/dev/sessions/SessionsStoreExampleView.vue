@@ -1,40 +1,61 @@
-<template lang="pug">
-.p-4.flex.flex-col.gap-y-4.w-64
-  Input(v-model.trim='name', placeholder='Название сессии')
-  Button(@click='createSession') Создать
-.p-4.flex.flex-col.gap-y-4.w-96
-  form(
-    v-for='session in sessions.sessions',
-    :key='session.getKey()',
-    @submit.prevent='saveEdit(session)'
-  )
-    card(:class='{ "border-white": selectedSession.is(session) }')
-      card-header
-        card-title
-          Input(
-            v-model.trim='editingName',
-            placeholder='Название сессии',
-            v-if='editingItemKey === session.getKey()'
-          )
-          p.cursor-pointer(v-else, @click='initEdit(session)') {{ session.name }}
-      card-content
-        i {{ session.getKey() }}
-      card-footer.gap-x-2
-        template(v-if='editingItemKey === session.getKey()')
-          card-action
-            Button Сохранить
-          card-action
-            Button(type='button', variant='ghost', @click='resetEdit') Отменить
-        template(v-else)
-          card-action
-            Button(
-              type='button',
-              @click='selectedSession.select(undefined)',
-              v-if='selectedSession.is(session)'
-            ) Отменить выбор
-            Button(type='button', @click='selectedSession.select(session)', v-else) Выбрать
-          card-action
-            Button(type='button', variant='destructive', @click='removeSession(session)') Удалить
+<template>
+  <div class="p-6">
+    <div class="mb-8 p-4 rounded-lg border">
+      <div class="flex flex-row items-center justify-between">
+        <div>
+          <h1 class="text-2xl font-bold">Управление сессиями</h1>
+          <p class="text-sm text-muted-foreground mt-1">Создавайте и редактируйте игровые сессии</p>
+        </div>
+        <div class="flex flex-row gap-3">
+          <Input v-model.trim="name" placeholder="Новое название сессии" class="min-w-[200px]" />
+          <Button @click="createSession">
+            Новая сессия
+          </Button>
+        </div>
+      </div>
+    </div>
+    <div v-if="sessions.sessions.length === 0" class="p-8 text-center border rounded-lg">
+      <p class="text-muted-foreground">У вас пока нет созданных сессий</p>
+    </div>
+    <div v-else class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <Card v-for="session in sessions.sessions" :key="session.getKey()" class="bg-muted/50 hover:border-primary"
+        :class="{ 'border-primary': selectedSession.is(session) }">
+        <form @submit.prevent="saveEdit(session)">
+          <CardHeader class="pb-3">
+            <CardTitle>
+              <div v-if="editingItemKey === session.getKey()">
+                <Input v-model.trim="editingName" placeholder="Название сессии" class="w-full" autoFocus />
+              </div>
+              <div v-else @click="initEdit(session)" class="cursor-pointer">
+                <p class="font-medium mb-2">
+                  {{ session.name }}
+                </p>
+                <p class="text-xs text-muted-foreground mt-1">ID: {{ session.getKey() }}</p>
+              </div>
+            </CardTitle>
+          </CardHeader>
+          <CardFooter class="flex justify-end gap-2 pt-3 border-t">
+            <template v-if="editingItemKey === session.getKey()">
+              <Button type="button" variant="outline" @click="resetEdit">
+                Отмена
+              </Button>
+              <Button type="submit">
+                Сохранить
+              </Button>
+            </template>
+            <template v-else>
+              <Button type="button" variant="outline" @click="toggleSelect(session)">
+                {{ selectedSession.is(session) ? 'Отменить' : 'Выбрать' }}
+              </Button>
+              <Button type="button" variant="destructive" @click="removeSession(session)">
+                Удалить
+              </Button>
+            </template>
+          </CardFooter>
+        </form>
+      </Card>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -47,7 +68,6 @@ const sessions = useSessionsStore()
 const selectedSession = useSelectedSessionStore()
 
 const name = ref<string>('')
-
 const editingItemKey = ref<ModelKey | undefined>(undefined)
 const editingName = ref<string>('')
 
@@ -67,13 +87,27 @@ function saveEdit(session: GameSession) {
   resetEdit()
 }
 
+function toggleSelect(session: GameSession) {
+  if (selectedSession.is(session)) {
+    selectedSession.select(undefined)
+  } else {
+    selectedSession.select(session)
+  }
+}
+
 function removeSession(session: GameSession) {
-  if (confirm(`Вы действительно хотите удалить сессию '${session.name}' (${session.getKey()})?`)) {
+  if (confirm(`Удалить сессию "${session.name}"?`)) {
     sessions.remove(session)
+    if (selectedSession.is(session)) {
+      selectedSession.select(undefined)
+    }
   }
 }
 
 function createSession() {
-  sessions.create(name.value)
+  if (name.value.trim()) {
+    sessions.create(name.value)
+    name.value = ''
+  }
 }
 </script>
