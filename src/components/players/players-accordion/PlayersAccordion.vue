@@ -3,7 +3,11 @@
     <AccordionItem value="item-1">
       <AccordionTrigger>{{ title }}</AccordionTrigger>
       <AccordionContent class="flex-column">
-        <players-table :characters="characters" class="mb-4" />
+        <players-table
+          :characters="characters"
+          class="mb-4"
+          @delete="removeCharacter"
+        />
         <div class="flex justify-end">
           <PlayersCreation :button_title="button_name" @create="addCharacter" />
         </div>
@@ -38,5 +42,9 @@ function toIngamePlayer(p: Player): IngamePlayer {
 
 function addCharacter(player: Player) {
   characters.value.push(toIngamePlayer(player))
+}
+
+function removeCharacter(index: number) {
+  characters.value.splice(index, 1)
 }
 </script>

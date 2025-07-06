@@ -13,17 +13,26 @@
         <TableCell><app-avatar /></TableCell>
         <TableCell>{{ character.name }}</TableCell>
         <TableCell>{{ character.class }}</TableCell>
-        <TableCell class="text-right"> {{ character.level }}</TableCell>
+        <TableCell class="flex justify-end items-center gap-2">
+          <span>{{ character.level }}</span>
+          <Trash2
+            class="w-4 h-4 text-red-500 cursor-pointer hover:text-red-700 transition-colors"
+            @click.stop="emit('delete', index)"
+          />
+        </TableCell>
       </TableRow>
     </TableBody>
   </Table>
 </template>
 
 <script setup lang="ts">
-import { defineProps } from 'vue'
+import { defineProps, defineEmits } from 'vue'
+import { Trash2 } from 'lucide-vue-next'
 import type { IngamePlayer } from '@/types/player'
 
 const props = defineProps<{
   characters: IngamePlayer[]
 }>()
+
+const emit = defineEmits(['delete'])
 </script>
