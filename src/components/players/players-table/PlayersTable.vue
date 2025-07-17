@@ -15,8 +15,8 @@
         <TableCell>{{ character.class }}</TableCell>
         <TableCell class="flex justify-end items-center gap-2">
           <span>{{ character.level }}</span>
-          <Trash2
-            class="w-4 h-4 text-red-500 cursor-pointer hover:text-red-700 transition-colors"
+          <i-radix-icons-exit
+            class="w-4 h-4 text-red-500 cursor-pointer hover:text-red-700"
             @click.stop="emit('delete', index)"
           />
         </TableCell>
@@ -27,7 +27,6 @@
 
 <script setup lang="ts">
 import { defineProps, defineEmits } from 'vue'
-import { Trash2 } from 'lucide-vue-next'
 import type { IngamePlayer } from '@/types/player'
 
 const props = defineProps<{

@@ -14,7 +14,7 @@
         sidebar-group-content
           // TODO: Оформить
           p.mb-2.p-2.font-bold Выбранная сессия:
-            p 777
+            p {{ selectedSession.session?.name || 'Не выбрано' }}
           sidebar-group-label Информация о сессии
           sidebar-menu
             sidebar-menu-item
@@ -30,3 +30,9 @@
                 i-radix-icons-person
                 p Сцены
 </template>
+
+<script setup lang="ts">
+import { useSelectedSessionStore } from '@/stores/sessions'
+
+const selectedSession = useSelectedSessionStore()
+</script>

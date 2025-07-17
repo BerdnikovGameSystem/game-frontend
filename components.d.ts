@@ -49,6 +49,7 @@ declare module 'vue' {
     Inp: typeof import('./src/components/ui/inp/Inp.vue')['default']
     Input: typeof import('./src/components/ui/input/Input.vue')['default']
     IRadixIconsDesktop: typeof import('~icons/radix-icons/desktop')['default']
+    IRadixIconsExit: typeof import('~icons/radix-icons/exit')['default']
     IRadixIconsHeart: typeof import('~icons/radix-icons/heart')['default']
     IRadixIconsMoon: typeof import('~icons/radix-icons/moon')['default']
     IRadixIconsPerson: typeof import('~icons/radix-icons/person')['default']
