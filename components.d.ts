@@ -52,6 +52,8 @@ declare module 'vue' {
     IRadixIconsExit: typeof import('~icons/radix-icons/exit')['default']
     IRadixIconsHeart: typeof import('~icons/radix-icons/heart')['default']
     IRadixIconsMoon: typeof import('~icons/radix-icons/moon')['default']
+    IRadixIconsPencil: typeof import('~icons/radix-icons/pencil')['default']
+    IRadixIconsPencil1: typeof import('~icons/radix-icons/pencil1')['default']
     IRadixIconsPerson: typeof import('~icons/radix-icons/person')['default']
     IRadixIconsSun: typeof import('~icons/radix-icons/sun')['default']
     Label: typeof import('./src/components/ui/label/Label.vue')['default']

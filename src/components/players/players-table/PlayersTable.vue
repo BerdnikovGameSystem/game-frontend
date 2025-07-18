@@ -15,9 +15,13 @@
         <TableCell>{{ character.class }}</TableCell>
         <TableCell class="flex justify-end items-center gap-2">
           <span>{{ character.level }}</span>
+          <i-radix-icons-pencil1
+            class="w-4 h-4 text-blue-500 cursor-pointer hover:text-blue-700"
+            @click="emit('edit', index)"
+          />
           <i-radix-icons-exit
             class="w-4 h-4 text-red-500 cursor-pointer hover:text-red-700"
-            @click.stop="emit('delete', index)"
+            @click="emit('delete', index)"
           />
         </TableCell>
       </TableRow>
@@ -33,5 +37,5 @@ const props = defineProps<{
   characters: IngamePlayer[]
 }>()
 
-const emit = defineEmits(['delete'])
+const emit = defineEmits(['delete', 'edit'])
 </script>
