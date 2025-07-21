@@ -7,12 +7,8 @@
       <Input type="number" v-model.number="formPlayer.level" />
     </Label>
     <Label class="flex flex-col items-start">Класс
-      <app-select
-        select-title="Классы"
-        select-placeholder="Выберите класс"
-        :select-items="classes"
-        v-model="formPlayer.class"
-      />
+      <app-select select-title="Классы" select-placeholder="Выберите класс" :select-items="classes"
+        v-model="formPlayer.class" />
     </Label>
     <Label class="flex flex-col items-start">Макс. Хиты
       <Input type="number" v-model.number="formPlayer.maxHits" />
@@ -20,7 +16,7 @@
     <Label class="flex flex-col items-start">KD
       <Input type="number" v-model.number="formPlayer.kd" />
     </Label>
-    <Label class="flex flex-col items-start">Макс. Энергия
+    <Label class="flex flex-col items-start">Спецочки
       <Input type="number" v-model.number="formPlayer.maxEnergy" />
     </Label>
     <Label class="flex flex-col items-start">Скорость
@@ -55,9 +51,9 @@ const formPlayer = ref<Player>({
   maxHits: 10,
   class: '',
   level: 0,
-  kd: 1,
+  kd: 10,
   maxEnergy: 5,
-  speed: 10
+  speed: 30
 })
 
 
@@ -88,9 +84,9 @@ function resetForm() {
     maxHits: 10,
     class: '',
     level: 0,
-    kd: 1,
+    kd: 10,
     maxEnergy: 5,
-    speed: 10
+    speed: 30
   }
 }
 </script>

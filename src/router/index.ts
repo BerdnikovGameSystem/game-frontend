@@ -12,13 +12,13 @@ const router = createRouter({
       component: HomeView,
     },
     {
-      path: '/battle-grid',
-      name: 'battle-grid',
+      path: '/characters',
+      name: 'characters',
       component: BattleGridView,
     },
     {
-      path: '/dev/sessions/store-example',
-      name: 'dev-sessions-store-example',
+      path: '/sessions',
+      name: 'sessions',
       component: SessionsStoreExampleView,
     },
   ],
