@@ -62,7 +62,7 @@
 import { ref } from 'vue'
 import { useSelectedSessionStore, useSessionsStore } from '@/stores/sessions'
 import type { ModelKey } from '@/stores/common.ts'
-import type { GameSession } from '@/stores/sessions/model.ts'
+import type { GameSession } from '@/stores/sessions/session.ts'
 
 const sessions = useSessionsStore()
 const selectedSession = useSelectedSessionStore()
