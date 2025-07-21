@@ -1,8 +1,7 @@
 import { createRouter, createWebHashHistory, createWebHistory } from 'vue-router'
 import HomeView from '../views/home-view/HomeView.vue'
 import BattleGridView from '@/views/battle-grid-view/BattleGridView.vue'
-import SessionsStoreExampleView
-  from '@/views/dev/sessions/SessionsStoreExampleView.vue'
+import SessionsStoreExampleView from '@/views/dev/sessions/SessionsStoreExampleView.vue'
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -13,13 +12,13 @@ const router = createRouter({
       component: HomeView,
     },
     {
-      path: '/battle-grid',
-      name: 'battle-grid',
+      path: '/characters',
+      name: 'characters',
       component: BattleGridView,
     },
     {
-      path: '/dev/sessions/store-example',
-      name: 'dev-sessions-store-example',
+      path: '/sessions',
+      name: 'sessions',
       component: SessionsStoreExampleView,
     },
   ],
