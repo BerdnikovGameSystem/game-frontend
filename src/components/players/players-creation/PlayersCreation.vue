@@ -18,7 +18,8 @@
 </template>
 
 <script setup lang="ts">
-import type { Player } from '@/types/player'
+
+import type { Player, PlayerStruct } from '@/stores/actors/players/player.ts'
 
 const props = defineProps<{
   button_title: string
@@ -27,11 +28,11 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  (e: 'create', player: Player): void
+  (e: 'create', player: PlayerStruct): void
   (e: 'update:open', value: boolean): void
 }>()
 
-function handleCreate(player: Player) {
+function handleCreate(player: PlayerStruct) {
   emit('create', player)
   emit('update:open', false)
 }
