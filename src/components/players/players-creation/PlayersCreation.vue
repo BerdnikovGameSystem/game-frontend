@@ -18,7 +18,6 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits } from 'vue'
 import type { Player } from '@/types/player'
 
 const props = defineProps<{

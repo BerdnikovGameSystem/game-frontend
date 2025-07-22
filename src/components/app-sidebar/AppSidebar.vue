@@ -14,7 +14,7 @@
       sidebar-group
         sidebar-group-content
           // TODO: Оформить
-          p.mb-2.p-2.font-bold Выбранная сессия:
+          .mb-2.p-2.font-bold Выбранная сессия:
             p {{ selectedSession.session?.name || 'Не выбрано' }}
           div(v-if ="selectedSession.session")
             sidebar-group-label Информация о сессии

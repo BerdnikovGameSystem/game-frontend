@@ -61,6 +61,7 @@ declare module 'vue' {
     IRadixIconsPerson: typeof import('~icons/radix-icons/person')['default']
     IRadixIconsPoners: typeof import('~icons/radix-icons/poners')['default']
     IRadixIconsSun: typeof import('~icons/radix-icons/sun')['default']
+    IRadixIconsTrash: typeof import('~icons/radix-icons/trash')['default']
     Label: typeof import('./src/components/ui/label/Label.vue')['default']
     PlayerCard: typeof import('./src/components/players/player-card/PlayerCard.vue')['default']
     PlayersAccordion: typeof import('./src/components/players/players-accordion/PlayersAccordion.vue')['default']

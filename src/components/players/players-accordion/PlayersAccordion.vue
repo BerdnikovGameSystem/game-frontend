@@ -3,10 +3,9 @@
     <AccordionItem value="item-1">
       <AccordionTrigger>{{ title }}</AccordionTrigger>
       <AccordionContent class="flex-column">
-        <players-table :characters="characters" class="mb-4" @delete="removeCharacter" @edit="editCharacter" />
+        <players-table :players="players.list" class="mb-4" @delete="removeCharacter" @edit="editCharacter" />
         <div class="flex justify-end">
-          <PlayersCreation :button_title="button_name" :playerToEdit="playerToEdit" v-model:open="sheetOpen"
-            @create="addCharacter" />
+          <PlayersCreation :button_title="button_name" :playerToEdit="playerToEdit" v-model:open="sheetOpen" @create="addCharacter" />
         </div>
       </AccordionContent>
     </AccordionItem>
@@ -14,61 +13,47 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, ref } from 'vue'
-import type { IngamePlayer, Player } from '@/types/player'
+import { ref } from 'vue'
+import { usePlayersStore } from '@/stores/actors/players'
+import { Player, type PlayerStruct } from '@/stores/actors/players/player.ts'
+import type { ModelKey } from '@/stores/common.ts'
+
 const sheetOpen = ref(false)
+
 const props = defineProps({
   title: {
     type: String,
-    required: true
+    required: true,
   },
   button_name: {
     type: String,
-    default: 'Добавить'
-  }
+    default: 'Добавить',
+  },
 })
 
-const characters = ref<IngamePlayer[]>([])
-const editingIndex = ref<number | null>(null)
-const playerToEdit = ref<Player | null>(null)
+const players = usePlayersStore()
+const editingIndex = ref<ModelKey | undefined>(undefined)
+const playerToEdit = ref<Player | undefined>(undefined)
 
-function toIngamePlayer(p: Player): IngamePlayer {
-  return {
-    ...p,
-    hits: p.maxHits,
-    energy: p.maxEnergy
-  }
-}
-
-function toPlayer(p: IngamePlayer): Player {
-  return {
-    name: p.name,
-    class: p.class,
-    maxHits: p.hits,
-    maxEnergy: p.energy,
-    kd: p.kd || 0,
-    speed: p.speed || 0,
-    level: p.level || 1
-  }
-}
-
-function addCharacter(player: Player) {
-  if (editingIndex.value !== null) {
-    characters.value[editingIndex.value] = toIngamePlayer(player)
-    editingIndex.value = null
-    playerToEdit.value = null
+function addCharacter(player: PlayerStruct) {
+  if (editingIndex.value) {
+    players.updateByKey(editingIndex.value, player)
   } else {
-    characters.value.push(toIngamePlayer(player))
+    players.create(player)
   }
+
+  sheetOpen.value = false
+  editingIndex.value = undefined
+  playerToEdit.value = undefined
 }
 
-function removeCharacter(index: number) {
-  characters.value.splice(index, 1)
+function removeCharacter(player: ModelKey | Player) {
+  players.remove(player)
 }
 
-function editCharacter(index: number) {
-  playerToEdit.value = toPlayer(characters.value[index])
-  editingIndex.value = index
+function editCharacter(player: ModelKey) {
+  playerToEdit.value = players.getByKey(player)
+  editingIndex.value = player
   sheetOpen.value = true
 }
 </script>
