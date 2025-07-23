@@ -19,7 +19,6 @@ export default defineConfigWithVueTs(
 
   pluginVue.configs['flat/essential'],
   vueTsConfigs.recommended,
-  pluginVuePug.configs['vue3-recommended'],
   ...pluginOxlint.configs['flat/recommended'],
   skipFormatting,
 
