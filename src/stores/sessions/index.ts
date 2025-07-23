@@ -4,10 +4,7 @@ import { GameSession, type GameSessionStruct } from '@/stores/sessions/session.t
 import { computed } from 'vue'
 import { createModelStore, type ModelKey } from '@/stores/common.ts'
 
-export const useSessionsStore = createModelStore<GameSession, GameSessionStruct>(
-  'store.sessions',
-  GameSession.revive,
-);
+export const useSessionsStore = createModelStore<GameSession, GameSessionStruct>('store.sessions', (...args) => GameSession.revive(...args))
 
 export const useSelectedSessionStore = defineStore('selectedSession', () => {
   const key = useStorage<ModelKey | undefined>('store.selectedSession', undefined)
