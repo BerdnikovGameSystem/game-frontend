@@ -32,10 +32,15 @@ export const useSelectedSessionStore = defineStore('selectedSession', () => {
     return key.value === session
   }
 
+  function isSelected() {
+    return key.value !== undefined
+  }
+
   return {
     key,
     session,
     select,
     is,
+    isSelected,
   }
 })
