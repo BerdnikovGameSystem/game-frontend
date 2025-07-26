@@ -1,10 +1,10 @@
-import { computed, type ComputedRef, type MaybeRefOrGetter, type Reactive, reactive, type Ref } from 'vue'
-import { useStorage } from '@vueuse/core'
+import { computed, type ComputedRef, isReactive, isRef, type MaybeRefOrGetter, type Reactive, reactive, ref, type Ref, watch } from 'vue'
+import { useStorage, watchOnce } from '@vueuse/core'
 import { toValue } from 'vue'
-import { defineStore } from 'pinia'
+import { defineStore, type Store } from 'pinia'
 
-export interface Objectable {
-  toObject(): { [key in string]: string | number | null }
+export interface Objectable<S extends object = { [key in string]: string | number | null }> {
+  toObject(): S
 }
 
 export interface Indexable {
@@ -17,7 +17,7 @@ export type ModelStruct<S extends object = object> = {
 
 export type NullableModelKey = ModelKey | null | undefined
 
-export abstract class Model<S extends ModelStruct = ModelStruct> implements Objectable, Indexable {
+export abstract class Model<S extends ModelStruct = ModelStruct> implements Objectable<S>, Indexable {
   public readonly uuid: ModelKey
 
   protected constructor(uuid: NullableModelKey = null) {
@@ -33,6 +33,10 @@ export abstract class Model<S extends ModelStruct = ModelStruct> implements Obje
       uuid: this.uuid,
     } as S
   }
+
+  onRemoving() {}
+
+  onRemoved() {}
 }
 
 export abstract class BaseModel<S extends object> extends Model<ModelStruct & S> {}
@@ -44,6 +48,31 @@ export type ReviveModelStruct<S extends object = object> = Partial<ModelStruct> 
 export type ReviveModelFunction<T extends Model, S extends object = object> = (obj: ReviveModelStruct<S>) => T
 
 export type MaybeReactive<T> = T | Reactive<T>
+export type MaybeReactiveOrRefFlat<T> = MaybeReactive<T> | MaybeRefOrGetter<T>
+export type MaybeReactiveOrRef<T> =
+  | MaybeReactiveOrRefFlat<T>
+  | MaybeReactiveOrRefFlat<MaybeReactiveOrRefFlat<T>>
+  | MaybeReactiveOrRefFlat<MaybeReactiveOrRefFlat<MaybeReactiveOrRefFlat<T>>>
+
+export function unwrapReactiveOrRefValue<T>(input: MaybeReactiveOrRef<T>): T {
+  if (typeof input === 'function') {
+    // Если функция — вызвать
+    return unwrapReactiveOrRefValue((input as () => MaybeReactiveOrRef<T>)())
+  }
+
+  if (isRef(input)) {
+    // Если Ref — взять .value
+    input = input.value as T
+    return unwrapReactiveOrRefValue(input.value)
+  }
+
+  if (isReactive(input)) {
+    // Если reactive — вернуть как есть (Proxy)
+    return toValue(input) as T
+  }
+
+  return input as T
+}
 
 export interface ModelStorage<T extends Model, S extends object = object> {
   raw: Ref<Record<ModelKey, ReviveModelStruct<S>>>
@@ -63,6 +92,7 @@ export interface ModelStorage<T extends Model, S extends object = object> {
   clear(): void
 
   update(model: T): T
+
   updateByKey(key: ModelKey, obj: S): T
 
   isEmpty: ComputedRef<boolean>
@@ -70,6 +100,13 @@ export interface ModelStorage<T extends Model, S extends object = object> {
 
 export type ModelStorageOptions = {
   wrapReactive?: boolean
+
+  /**
+   * Автоматически сохранять изменения
+   *
+   * @note Работает только если `wrapReactive` = `true`
+   */
+  autoSave?: boolean
 }
 
 export function useModelStorage<T extends Model, S extends object = object>(
@@ -77,7 +114,7 @@ export function useModelStorage<T extends Model, S extends object = object>(
   revive: ReviveModelFunction<T, S>,
   options: ModelStorageOptions = {},
 ): ModelStorage<T, S> {
-  const { wrapReactive = true } = options
+  const { wrapReactive = true, autoSave = true } = options
 
   const raw = useStorage<Record<ModelKey, ReviveModelStruct<S>>>(key, {})
 
@@ -89,45 +126,66 @@ export function useModelStorage<T extends Model, S extends object = object>(
     return reviveModel(obj)
   }
 
-  function reviveModel(obj: ReviveModelStruct<S>): MaybeReactive<T> {
-    const model = revive(obj)
-    return wrapReactive ? reactive(model) : model
+  function reviveModel(obj: MaybeReactiveOrRef<ReviveModelStruct<S>>): MaybeReactive<T> {
+    return wrapReactiveModel(revive(unwrapReactiveOrRefValue(obj)))
   }
 
-  function create(obj: ReviveModelStruct<S>): T {
-    return save(revive(obj))
+  function wrapReactiveModel(model: T): MaybeReactive<T> {
+    if (wrapReactive) {
+      const reactiveModel = reactive(model)
+
+      if (autoSave) {
+        watch(reactiveModel, (value) => {
+          save(value)
+        })
+      }
+      return reactiveModel
+    } else {
+      return model
+    }
   }
 
-  function save(model: T): T {
+  function create(obj: MaybeReactiveOrRef<ReviveModelStruct<S>>): T {
+    return save(revive(unwrapReactiveOrRefValue(obj)))
+  }
+
+  function save(model: MaybeReactiveOrRef<T>): T {
+    model = unwrapReactiveOrRefValue(model)
+
     if (!model.toObject().uuid) {
       throw new Error('Model must have a UUID before saving')
     }
+
     raw.value[model.getKey()] = model.toObject() as ReviveModelStruct<S>
     return model
   }
 
-  function update(model: T): T {
+  function update(model: MaybeReactiveOrRef<T>): T {
     return save(model)
   }
 
-  function remove(model: MaybeRefOrGetter<T | ModelKey>): void {
-    const resolved = toValue(model)
+  function remove(modelOrKey: MaybeReactiveOrRef<T | ModelKey>): void {
+    const resolved = unwrapReactiveOrRefValue(modelOrKey)
 
-    let key: ModelKey
+    let model: T
     if (resolved instanceof Model) {
-      key = resolved.getKey()
+      model = resolved as T
     } else {
-      key = resolved
+      model = getByKey(resolved) as T
     }
 
-    delete raw.value[key]
+    model?.onRemoving()
+    delete raw.value[model?.getKey() ?? resolved]
+    model?.onRemoved()
   }
 
-  function getByKey(uuid: ModelKey): MaybeReactive<T> | undefined {
-    return reviveModelNullable(raw.value[uuid] as ReviveModelStruct<S> | undefined)
+  function getByKey(key: MaybeReactiveOrRef<ModelKey>): MaybeReactive<T> | undefined {
+    key = unwrapReactiveOrRefValue(key)
+    return reviveModelNullable(raw.value[key] as ReviveModelStruct<S> | undefined)
   }
 
-  function updateByKey(key: ModelKey, obj: ReviveModelStruct<S>): T {
+  function updateByKey(key: MaybeReactiveOrRef<ModelKey>, obj: ReviveModelStruct<S>): T {
+    key = unwrapReactiveOrRefValue(key)
     raw.value[key] = obj
     return getByKey(key) as T
   }
