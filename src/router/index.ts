@@ -1,7 +1,7 @@
-import { createRouter, createWebHashHistory, createWebHistory } from 'vue-router'
-import HomeView from '../views/home-view/HomeView.vue'
+import { createRouter, createWebHashHistory } from 'vue-router'
 import BattleGridView from '@/views/battle-grid-view/BattleGridView.vue'
 import SessionsStoreExampleView from '@/views/dev/sessions/SessionsStoreExampleView.vue'
+import { useSelectedSessionStore } from '@/stores/sessions'
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -9,7 +9,15 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: HomeView,
+      redirect: () => {
+        if (useSelectedSessionStore().isSelected()) {
+          // TODO: is game started => ingame view
+
+          return { path: '/characters' }
+        } else {
+          return { path: '/sessions' }
+        }
+      },
     },
     {
       path: '/characters',
