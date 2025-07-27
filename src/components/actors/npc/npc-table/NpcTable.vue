@@ -38,7 +38,7 @@
 import type { Player } from '@/stores/actors/players/player.ts'
 
 const props = defineProps<{
-  players: Player[]
+  players: Player[],
 }>()
 
 const emit = defineEmits(['delete', 'edit'])

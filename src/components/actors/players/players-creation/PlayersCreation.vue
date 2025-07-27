@@ -5,12 +5,11 @@
         {{ button_title }}
       </Button>
     </SheetTrigger>
-
     <SheetContent class="w-full max-w-md">
       <SheetHeader>
         <SheetTitle class="mb-4">{{ button_title }}</SheetTitle>
         <SheetDescription>
-          <players-form :player="playerToEdit" @create="handleCreate" />
+          <players-form :player="playerToEdit" :isOpen="props.open" @create="handleCreate" />
         </SheetDescription>
       </SheetHeader>
     </SheetContent>
@@ -18,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-
+import { ref, watch } from 'vue'
 import type { Player, PlayerStruct } from '@/stores/actors/players/player.ts'
 
 const props = defineProps<{
@@ -36,6 +35,4 @@ function handleCreate(player: PlayerStruct) {
   emit('create', player)
   emit('update:open', false)
 }
-
-
 </script>

@@ -1,37 +1,31 @@
 <template>
-  <div class="flex flex-col gap-y-3">
-    <Label class="flex flex-col items-start"
-      >Имя
+  <form class="flex flex-col gap-y-3" @submit.prevent="createPlayer">
+    <Label class="flex flex-col items-start">Имя
       <Input v-model="formPlayer.name" />
     </Label>
-    <Label class="flex flex-col items-start"
-      >Уровень
+    <Label class="flex flex-col items-start">Уровень
       <Input type="number" v-model.number="formPlayer.level" />
     </Label>
-    <Label class="flex flex-col items-start"
-      >Класс
-      <app-select select-title="Классы" select-placeholder="Выберите класс" :select-items="classes" v-model="formPlayer.type" />
+    <Label class="flex flex-col items-start">Класс
+      <app-select select-title="Классы" select-placeholder="Выберите класс" :select-items="classes"
+        v-model="formPlayer.type" />
     </Label>
-    <Label class="flex flex-col items-start"
-      >Макс. Хиты
+    <Label class="flex flex-col items-start">Макс. Хиты
       <Input type="number" v-model.number="formPlayer.maxHealth" />
     </Label>
-    <Label class="flex flex-col items-start"
-      >KD
+    <Label class="flex flex-col items-start">KD
       <Input type="number" v-model.number="formPlayer.kd" />
     </Label>
-    <Label class="flex flex-col items-start"
-      >Спецочки
+    <Label class="flex flex-col items-start">Спецочки
       <Input type="number" v-model.number="formPlayer.maxMana" />
     </Label>
-    <Label class="flex flex-col items-start"
-      >Скорость
+    <Label class="flex flex-col items-start">Скорость
       <Input type="number" v-model.number="formPlayer.speed" />
     </Label>
-    <Button @click="createPlayer" class="my-5">
+    <Button type="submit" class="my-5">
       {{ isEditing ? 'Сохранить' : 'Создать' }}
     </Button>
-  </div>
+  </form>
 </template>
 
 <script setup lang="ts">
@@ -43,6 +37,7 @@ const selectedSession = useSelectedSessionStore()
 
 const props = defineProps<{
   player?: Player | null
+  isOpen?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -55,40 +50,10 @@ const classes = [
   { value: 'mage', label: 'Маг' },
 ]
 
-const formPlayer = ref<PlayerStruct>({
-  session: selectedSession.key ?? '',
-  name: '',
-  maxHealth: 10,
-  type: '',
-  level: 0,
-  kd: 10,
-  maxMana: 5,
-  speed: 30,
-})
+const formPlayer = ref<PlayerStruct>(emptyPlayer())
 
-watch(
-  () => props.player,
-  (newPlayer) => {
-    resetForm();
-
-    if (newPlayer) {
-      formPlayer.value = newPlayer.toObject()
-    }
-  },
-  { immediate: true },
-)
-
-const isEditing = computed(() => props.player !== null)
-
-function createPlayer() {
-  emit('create', { ...formPlayer.value })
-  if (!isEditing.value) {
-    resetForm()
-  }
-}
-
-function resetForm() {
-  formPlayer.value = {
+function emptyPlayer(): PlayerStruct {
+  return {
     session: selectedSession.key ?? '',
     name: '',
     maxHealth: 10,
@@ -98,5 +63,32 @@ function resetForm() {
     maxMana: 5,
     speed: 30,
   }
+}
+
+const isEditing = computed(() => props.player !== null && props.player !== undefined)
+
+watch(
+  () => props.player,
+  (newPlayer) => {
+    if (newPlayer) {
+      formPlayer.value = newPlayer.toObject()
+    } else {
+      formPlayer.value = emptyPlayer()
+    }
+  },
+  { immediate: true }
+)
+
+watch(
+  () => props.isOpen,
+  (val) => {
+    if (!val) {
+      formPlayer.value = emptyPlayer()
+    }
+  }
+)
+
+function createPlayer() {
+  emit('create', { ...formPlayer.value })
 }
 </script>

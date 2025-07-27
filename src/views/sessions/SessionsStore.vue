@@ -1,14 +1,16 @@
 <template>
   <div class="p-6">
     <div class="mb-8 rounded-lg border p-4">
-      <div class="flex flex-row items-center justify-between">
-        <div>
+      <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div class="mb-4 md:mb-0">
           <h1 class="text-2xl font-bold">Управление сессиями</h1>
           <p class="text-muted-foreground mt-1 text-sm">Создавайте и редактируйте игровые сессии</p>
         </div>
-        <div class="flex flex-row gap-3">
-          <Input v-model.trim="name" placeholder="Новое название сессии" class="min-w-[200px]" />
-          <Button @click="createSession" :disabled="name.length === 0"> Новая сессия </Button>
+        <div class="flex flex-col gap-3 sm:flex-row">
+          <Input v-model.trim="name" placeholder="Новое название сессии" class="w-full md:w-auto" />
+          <Button @click="createSession" :disabled="name.length === 0" class="w-full sm:w-auto">
+            Новая сессия
+          </Button>
         </div>
       </div>
     </div>

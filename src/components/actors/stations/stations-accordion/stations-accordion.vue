@@ -3,9 +3,11 @@
     <AccordionItem value="item-1">
       <AccordionTrigger>{{ title }}</AccordionTrigger>
       <AccordionContent class="flex-column">
-        <players-table :players="players.list" class="mb-4" @delete="removeCharacter" @edit="editCharacter" />
+        <stations-table :players="players.list" class="mb-4" @delete="removeCharacter" @edit="editCharacter"
+   />
         <div class="flex justify-end">
-          <PlayersCreation :button_title="button_name" :playerToEdit="playerToEdit" v-model:open="sheetOpen" @create="addCharacter" />
+          <StationsCreation :button_title="button_name" :playerToEdit="playerToEdit" v-model:open="sheetOpen"
+            @create="addCharacter" />
         </div>
       </AccordionContent>
     </AccordionItem>
@@ -13,10 +15,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { usePlayersStore } from '@/stores/actors/players'
 import { Player, type PlayerStruct } from '@/stores/actors/players/player.ts'
 import type { ModelKey } from '@/stores/common.ts'
+import StationsCreation from '../stations-creation/StationsCreation.vue'
 
 const sheetOpen = ref(false)
 
@@ -30,6 +33,7 @@ const props = defineProps({
     default: 'Добавить',
   },
 })
+
 
 const players = usePlayersStore()
 const editingIndex = ref<ModelKey | undefined>(undefined)
@@ -56,4 +60,11 @@ function editCharacter(player: ModelKey) {
   editingIndex.value = player
   sheetOpen.value = true
 }
+
+watch(sheetOpen, (val) => {
+  if (!val) {
+    playerToEdit.value = undefined
+    editingIndex.value = undefined
+  }
+})
 </script>
