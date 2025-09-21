@@ -221,7 +221,7 @@ export function useModelStorage<T extends Model, S extends object = object>(
     has,
     clear,
     updateByKey,
-  } satisfies ModelStorage<T>
+  } satisfies ModelStorage<T, S>
 }
 
 export type ModelStoreOptions = {

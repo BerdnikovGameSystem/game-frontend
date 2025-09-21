@@ -1,16 +1,12 @@
 import { Actor, type ActorStruct, GameActor, type GameActorStruct } from '@/stores/actors/actor.ts'
 import { type GameSession } from '@/stores/sessions/session.ts'
-import { assertExists, type MaybeReactive, type ModelKey, type ModelStorage, type ModelStruct, type NullableModelKey } from '@/stores/common.ts'
+import { assertExists, type MaybeReactive, type ModelStorage, type ModelStruct, type NullableModelKey } from '@/stores/common.ts'
 import { useSessionsStore } from '@/stores/sessions'
-import { useGamePlayersStore, usePlayersStore } from '@/stores/actors/players/index.ts'
+import { usePlayersStore } from '@/stores/actors/players/index.ts'
 
-export type PlayerStruct = ActorStruct<{
-  type: string
-  level: number
-  maxMana: number
-}>
+export type MobStruct = ActorStruct
 
-export class Player extends Actor<PlayerStruct> {
+export class Mob extends Actor<MobStruct> {
   public constructor(
     uuid: NullableModelKey,
     session: MaybeReactive<GameSession>,
@@ -25,12 +21,12 @@ export class Player extends Actor<PlayerStruct> {
     super(uuid, session, name, maxHealth, speed, kd)
   }
 
-  static revive(obj: PlayerStruct & Partial<ModelStruct>): Player {
+  static revive(obj: MobStruct & Partial<ModelStruct>): Mob {
     const session = assertExists(useSessionsStore().getByKey(obj.session))
-    return new Player(obj.uuid, session, obj.name, obj.maxHealth, obj.speed, obj.kd, obj.type, obj.maxMana, obj.level)
+    return new Mob(obj.uuid, session, obj.name, obj.type, obj.maxHealth, obj.level, obj.kd, obj.speed, obj.maxMana)
   }
 
-  toObject(): ModelStruct<PlayerStruct> {
+  toObject(): ModelStruct<MobStruct> {
     return {
       ...super.toObject(),
       maxMana: this.maxMana,
@@ -39,8 +35,8 @@ export class Player extends Actor<PlayerStruct> {
     }
   }
 
-  makeGameActor(initial?: Partial<GamePlayerStruct>): GameActor {
-    return GamePlayer.revive({
+  makeGameActor(initial?: Partial<GameMobStruct>): GameActor {
+    return GameMob.revive({
       health: this.maxHealth,
       mana: this.maxMana,
       ...initial,
@@ -49,33 +45,32 @@ export class Player extends Actor<PlayerStruct> {
   }
 
   getGameActorsStore(): undefined | ModelStorage<GameActor, GameActorStruct> {
-    return useGamePlayersStore()
+    return useGameMobsStore()
   }
 }
 
-export type GamePlayerStruct = GameActorStruct<{
+export type GameMobStruct = GameActorStruct<{
   mana: number
 }>
 
-export class GamePlayer extends GameActor<Player, GamePlayerStruct> {
+export class GameMob extends GameActor<Mob, GameMobStruct> {
   public constructor(
     uuid: NullableModelKey,
-    actor: MaybeReactive<Player>,
+    actor: MaybeReactive<Mob>,
     health: number,
     public mana: number,
   ) {
     super(uuid, actor, health)
   }
 
-  static revive(obj: GamePlayerStruct & Partial<ModelStruct>): GamePlayer {
+  static revive(obj: GameMobStruct & Partial<ModelStruct>): GameMob {
     const actor = assertExists(usePlayersStore().getByKey(obj.actor))
-    return new GamePlayer(obj.uuid, actor, obj.health, obj.mana)
+    return new GameMob(obj.uuid, actor, obj.health, obj.mana)
   }
 
-  toObject(): ModelStruct<GamePlayerStruct> {
+  toObject(): ModelStruct<GameMobStruct> {
     return {
       ...super.toObject(),
-      mana: this.mana,
     }
   }
 }
