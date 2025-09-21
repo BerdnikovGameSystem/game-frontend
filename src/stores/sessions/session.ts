@@ -1,11 +1,22 @@
-import {
-  BaseModel,
-  type ModelStruct, type NullableModelKey
-} from '@/stores/common.ts'
-import { usePlayersStore } from '@/stores/actors/players'
+import { BaseModel, type ModelKey, type ModelStruct, type NullableModelKey } from '@/stores/common.ts'
+import type { StoreDefinition } from 'pinia'
 
 export type GameSessionStruct = {
-  name: string,
+  name: string
+}
+
+const _sessionRelatedStores = []
+
+/**
+ * Стор должен содержать list и элементы должны содержать session как обьект
+ */
+export function registerSessionRelatedStore(store: StoreDefinition, sessionKeyGetter?: (obj: object) => ModelKey = undefined): StoreDefinition {
+  sessionKeyGetter = sessionKeyGetter || ((obj: object) => obj.session.getKey())
+  _sessionRelatedStores.push({
+    store,
+    sessionKeyGetter,
+  })
+  return store
 }
 
 export class GameSession extends BaseModel<GameSessionStruct> {
@@ -28,11 +39,12 @@ export class GameSession extends BaseModel<GameSessionStruct> {
   }
 
   onRemoving() {
-    // TODO: Сделать как-то более красиво
-    const players = usePlayersStore();
-    for (const player of players.list) {
-      if (player.session.getKey() === this.uuid) {
-        players.remove(player)
+    for (const data of _sessionRelatedStores) {
+      const store = data.store(useStore.store)
+      for (const item of store.list) {
+        if (data.sessionKeyGetter(item) === this.getKey()) {
+          store.remove(item)
+        }
       }
     }
   }

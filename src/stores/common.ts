@@ -1,7 +1,7 @@
-import { computed, type ComputedRef, isReactive, isRef, type MaybeRefOrGetter, type Reactive, reactive, ref, type Ref, watch } from 'vue'
-import { useStorage, watchOnce } from '@vueuse/core'
+import { computed, type ComputedRef, isReactive, isRef, type MaybeRefOrGetter, type Reactive, reactive, type Ref, watch } from 'vue'
+import { useStorage } from '@vueuse/core'
 import { toValue } from 'vue'
-import { defineStore, type Store } from 'pinia'
+import { defineStore } from 'pinia'
 
 export interface Objectable<S extends object = { [key in string]: string | number | null }> {
   toObject(): S
@@ -221,7 +221,7 @@ export function useModelStorage<T extends Model, S extends object = object>(
     has,
     clear,
     updateByKey,
-  } satisfies ModelStorage<T>
+  } satisfies ModelStorage<T, S>
 }
 
 export type ModelStoreOptions = {
