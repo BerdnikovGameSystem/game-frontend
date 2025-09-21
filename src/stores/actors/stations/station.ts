@@ -1,9 +1,7 @@
 import { Actor, type ActorStruct, GameActor, type GameActorStruct } from '@/stores/actors/actor.ts'
-import { type GameSession } from '@/stores/sessions/session.ts'
 import { assertExists, type MaybeReactive, type ModelStorage, type ModelStruct, type NullableModelKey } from '@/stores/common.ts'
 import { useSessionsStore } from '@/stores/sessions'
-import { usePlayersStore } from '@/stores/actors/players/index.ts'
-import { useGameStationsStore } from '@/stores/actors/stations/index.ts'
+import { useGameStationsStore, useStationsStore } from '@/stores/actors/stations/index.ts'
 
 export type StationStruct = ActorStruct
 
@@ -39,7 +37,7 @@ export class GameStation extends GameActor<Station, GameStationStruct> {
   }
 
   static revive(obj: GameStationStruct & Partial<ModelStruct>): GameStation {
-    const actor = assertExists(usePlayersStore().getByKey(obj.actor))
+    const actor = assertExists(useStationsStore().getByKey(obj.actor))
     return new GameStation(obj.uuid, actor, obj.health, obj.mana)
   }
 

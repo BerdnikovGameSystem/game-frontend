@@ -1,6 +1,6 @@
 import { Actor, type ActorStruct, GameActor, type GameActorStruct } from '@/stores/actors/actor.ts'
 import { type GameSession } from '@/stores/sessions/session.ts'
-import { assertExists, type MaybeReactive, type ModelKey, type ModelStorage, type ModelStruct, type NullableModelKey } from '@/stores/common.ts'
+import { assertExists, type MaybeReactive, type ModelStorage, type ModelStruct, type NullableModelKey } from '@/stores/common.ts'
 import { useSessionsStore } from '@/stores/sessions'
 import { useGamePlayersStore, usePlayersStore } from '@/stores/actors/players/index.ts'
 
